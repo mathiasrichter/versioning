@@ -1,0 +1,24 @@
+@prefix : <http://example.org/versioning/> .
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:birthdate a rdfs:Property ;
+    sh:path :birthdate ;
+    sh:datatype xsd:date ;
+.
+
+:Person a rdfs:Class, sh:NodeShape ;
+    sh:property :name, :birthdate ;
+.
+
+# the tagging of the graph with a version number is done manually here
+# in the real world this would be done when adding new version of the graph
+:birthdate :version 2 .
+rdfs:Property :version 2 .
+xsd:date :version 2 .
+:Person :version 2 .
+rdfs:Class :version 2 .
+sh:NodeShape :version 2 .
