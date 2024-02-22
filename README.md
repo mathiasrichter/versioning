@@ -1,2 +1,2 @@
-# versioning
-an exploration of how to version rdf graphs
+# Versioning
+An exploration of how to version rdf graphs.
