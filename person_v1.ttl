@@ -1,24 +1,95 @@
-@prefix : <http://example.org/versioning/> .
+@prefix : <http://example.org/person/> .
 
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix v: <http://example.org/versioning/> .
+
 
 :birthdate a rdfs:Property ;
     sh:path :birthdate ;
     sh:datatype xsd:string ;
 .
 
-:Person a rdfs:Class, sh:NodeShape ;
-    sh:property :birthdate ;
+:name a rdfs:Property ;
+    sh:path :name ;
+    sh:datatype xsd:string ;
 .
 
-# the tagging of the graph with a version number is done manually here
+:Person a rdfs:Class, sh:NodeShape ;
+    sh:property :name, :birthdate ;
+.
+
+# the tagging of the graph's triples with a version number is done manually here
 # in the real world this would be done when adding new version of the graph
-:birthdate :version 1 .
-rdfs:Property :version 1 .
-xsd:string :version 1 .
-:Person :version 1 .
-rdfs:Class :version 1 .
-sh:NodeShape :version 1 .
+
+:vt11 a v:VersionedTriple ;
+    v:s :birthdate ;
+    v:p rdf:type ;
+    v:o rdfs:Property ;
+    v:version 1 ;
+.
+
+:vt12 a v:VersionedTriple ;
+    v:s :birthdate ;
+    v:p sh:path ;
+    v:o :birthdate ;
+    v:version 1 ;
+.
+
+:vt13 a v:VersionedTriple ;
+    v:s :birthdate ;
+    v:p sh:datatype ;
+    v:o xsd:string ;
+    v:version 1 ;
+.
+
+:vt14 a v:VersionedTriple ;
+    v:s :Person ;
+    v:p rdf:type ;
+    v:o rdfs:Class ;
+    v:version 1 ;
+.
+
+:vt15 a v:VersionedTriple ;
+    v:s :Person ;
+    v:p rdf:type ;
+    v:o sh:NodeShape ;
+    v:version 1 ;
+.
+
+:vt16 a v:VersionedTriple ;
+    v:s :Person ;
+    v:p sh:property ;
+    v:o :birthdate ;
+    v:version 1 ;
+.
+
+:vt17 a v:VersionedTriple ;
+    v:s :name ;
+    v:p rdf:type ;
+    v:o rdfs:Property ;
+    v:version 1 ;
+.
+
+:vt18 a v:VersionedTriple ;
+    v:s :name ;
+    v:p sh:path ;
+    v:o :name ;
+    v:version 1 ;
+.
+
+:vt19 a v:VersionedTriple ;
+    v:s :name ;
+    v:p sh:datatype ;
+    v:o xsd:string ;
+    v:version 1 ;
+.
+
+:vt110 a v:VersionedTriple ;
+    v:s :Person ;
+    v:p sh:property ;
+    v:o :name ;
+    v:version 1 ;
+.

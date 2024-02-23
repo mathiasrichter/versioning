@@ -1,0 +1,34 @@
+@prefix : <http://example.org/versioning/> .
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:version a rdfs:Property ;
+    sh:path :version ;
+    sh:minCount 1 ;
+    sh:datatype xsd:integer ;
+.
+
+:s a rdfs:Property ;
+    sh:path :s ;
+    sh:minCount 1;
+    sh:maxCount 1;
+.
+
+:p a rdfs:Property ;
+    sh:path :p ;
+    sh:minCount 1;
+    sh:maxCount 1;
+.
+
+:o a rdfs:Property ;
+    sh:path :o ;
+    sh:minCount 1;
+    sh:maxCount 1;
+.
+
+:VersionedTriple a rdfs:Class, sh:NodeShape ;
+    sh:property :s, :p, :o, :version ;
+.

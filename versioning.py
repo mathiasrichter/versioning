@@ -28,9 +28,11 @@ def query_version(graph, version):
                 SELECT DISTINCT ?s ?p ?o
                 WHERE
                 { 
-                    ?s ?p ?o .
-                    ?s v:version ?version .
-                    ?o v:version ?version .
+                    ?vt rdf:type v:VersionedTriple .
+                    ?vt v:version ?version .
+                    ?vt v:s ?s .
+                    ?vt v:p ?p .
+                    ?vt v:o ?o .
                 }
             """)
     result = graph.query(query, initBindings={"version": Literal(version)})
@@ -48,6 +50,10 @@ g2 = Graph().parse("person_v2.ttl")
 g = g1 + g2
 
 # extract versions 1 and 2 as separate graphs from the combined supergraph and pretty print
-print_graph(query_version(g, 1))
-print("-------------------------------------------------------------------------------------------")
+# print_graph(g1)
+# print("-------------------------------------------------------------------------------------------")
+# print_graph(g1)
+# print("-------------------------------------------------------------------------------------------")
+# print_graph(query_version(g, 1))
+# print("-------------------------------------------------------------------------------------------")
 print_graph(query_version(g, 2))
