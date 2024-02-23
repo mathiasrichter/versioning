@@ -6,29 +6,33 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :version a rdfs:Property ;
+    rdfs:comment "The version number of a VersionedTriple." ;
     sh:path :version ;
     sh:minCount 1 ;
     sh:datatype xsd:integer ;
 .
 
 :s a rdfs:Property ;
+    rdfs:comment "The subject of a VersionedTriple." ;
     sh:path :s ;
     sh:minCount 1;
     sh:maxCount 1;
 .
 
 :p a rdfs:Property ;
-    sh:path :p ;
+    rdfs:comment "The predicate of a VersionedTriple." ;    sh:path :p ;
     sh:minCount 1;
     sh:maxCount 1;
 .
 
 :o a rdfs:Property ;
+    rdfs:comment "The object of a VersionedTriple." ;
     sh:path :o ;
     sh:minCount 1;
     sh:maxCount 1;
 .
 
 :VersionedTriple a rdfs:Class, sh:NodeShape ;
+    rdfs:comment "A VersionedTriple combines a (subject, object, predicate) with a version number." ;
     sh:property :s, :p, :o, :version ;
 .
