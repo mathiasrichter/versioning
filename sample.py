@@ -7,7 +7,7 @@ vc = GraphVersionControl()
 g1 = Graph().parse("person_v1.ttl")
 vc.commit("person", g1)
 
-# load version 2 of the person graph
+# load version 2 of the person graph and commit to version control
 g2 = Graph().parse("person_v2.ttl")
 vc.commit("person", g2)
 
