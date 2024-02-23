@@ -42,6 +42,22 @@ class GraphNotFound(Exception):
 
 class GraphVersionControl:
     
+    VERSION_QUERY = prepareQuery("""
+                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                    PREFIX sh: <http://www.w3.org/ns/shacl#>
+                    PREFIX v: <http://example.org/versioning/>
+                    SELECT DISTINCT ?s ?p ?o
+                    WHERE
+                    { 
+                        ?vt rdf:type v:VersionedTriple .
+                        ?vt v:version ?version .
+                        ?vt v:s ?s .
+                        ?vt v:p ?p .
+                        ?vt v:o ?o .
+                    }
+                """)
+    
     def __init__(self, versioning_iri = 'http://example.org/versioning/' ):
         self.graphs = {}
         self.versioning_iri = versioning_iri
@@ -105,22 +121,7 @@ class GraphVersionControl:
     def query_version(self, graph:Graph, version:int) -> Graph:
         """Takes a graph representing the superset of multiple versions and extracts just the graph for the specified version."""
         result_graph = Graph()
-        query = prepareQuery("""
-                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                    PREFIX sh: <http://www.w3.org/ns/shacl#>
-                    PREFIX v: <http://example.org/versioning/>
-                    SELECT DISTINCT ?s ?p ?o
-                    WHERE
-                    { 
-                        ?vt rdf:type v:VersionedTriple .
-                        ?vt v:version ?version .
-                        ?vt v:s ?s .
-                        ?vt v:p ?p .
-                        ?vt v:o ?o .
-                    }
-                """)
-        result = graph.query(query, initBindings={"version": Literal(version)})
+        result = graph.query(self.VERSION_QUERY, initBindings={"version": Literal(version)})
         if len(result) == 0:
             raise NotAVersion("No version {} for graph.".format(version))
         for r in result:
