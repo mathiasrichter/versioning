@@ -5,6 +5,8 @@ An exploration of how to version rdf graphs.
 
 `person_v1.ttl`and `person_v2.ttl` are two versions of the same graph.   
 
+`pretty.py`contains a pretty printer for graphs.   
+
 `sample.py` shows how to tie it all together.   
 
 Have fun!

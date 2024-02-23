@@ -1,5 +1,6 @@
 from rdflib import Graph
-from versioning import GraphVersionControl, GraphPrettyPrinter    
+from versioning import GraphVersionControl
+from pretty import GraphPrettyPrinter   
 
 vc = GraphVersionControl()
 
