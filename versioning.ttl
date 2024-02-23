@@ -20,7 +20,8 @@
 .
 
 :p a rdfs:Property ;
-    rdfs:comment "The predicate of a VersionedTriple." ;    sh:path :p ;
+    rdfs:comment "The predicate of a VersionedTriple." ;    
+    sh:path :p ;
     sh:minCount 1;
     sh:maxCount 1;
 .
