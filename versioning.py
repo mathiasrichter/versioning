@@ -29,6 +29,16 @@ class GraphPrettyPrinter:
             i += 1
         print("<<<< Graph end <<<<")
 
+class NotAVersion(Exception):
+    
+    def __init__(self, msg:str):
+        super().__init__(msg)
+        
+class GraphNotFound(Exception):
+    
+    def __init__(self, msg:str):
+        super().__init__(msg)
+        
 
 class GraphVersionControl:
     
@@ -39,13 +49,31 @@ class GraphVersionControl:
             self.versioning_iri += '/'
         
     def get_id(self) -> str:
+        """Generate a unique id based on timestamp."""
         return str(datetime.timestamp(datetime.now())).replace('.','')
 
-    def get_committed_graphs(self):
+    def get_committed_graphs(self) -> list:
+        """Return the list of graphs committed to this instance."""
         return self.graphs
     
+    def get_entry(self, graph_name:str) -> dict:
+        if graph_name in self.graphs.keys():
+            return self.graphs[graph_name]
+        raise GraphNotFound(graph_name)
+    
+    def get_latest_version_number(self, graph_name:str) -> int:
+        entry = self.get_entry(graph_name)
+        return entry['version']
+    
     def commit(self, graph_name:str, graph:Graph) -> int:
-        if graph_name not in self.graphs.keys():
+        """Takes the graph and stores it under the specified name, creating version 1 if the graph has not been stored before,
+        or a subsequent version if it has been stored before."""
+        try:
+            version_record = self.get_entry(graph_name)
+            version_record['version'] += 1
+            version_record['graph'] += self.create_version(graph, version_record['version'])
+            return version_record['version']            
+        except GraphNotFound:
             # first version
             self.graphs[graph_name] = {
                 'name': graph_name, 
@@ -53,13 +81,9 @@ class GraphVersionControl:
                 'version': 1
             }
             return 1
-        else:
-            version_record = self.graphs[graph_name]
-            version_record['version'] += 1
-            version_record['graph'] += self.create_version(graph, version_record['version'])
-            return version_record['version']
 
     def create_version(self, graph:Graph, version:int) -> Graph:
+        """Takes a graph, stores it under the specified name and tags it with the specified version."""
         result = Graph()
         for s,p,o in graph:
             result.add((s,p,o))
@@ -71,8 +95,12 @@ class GraphVersionControl:
             result.add((vt, URIRef(self.versioning_iri+'version'), Literal(version)))
         return result
     
-    def get_version(self, graph_name:str, version:int) -> Graph:
-        return self.query_version(self.graphs[graph_name]['graph'], version)
+    def get_version(self, graph_name:str, version:int=None) -> Graph:
+        """Return the graph corresponding to the name and version number specified. If no version is specified, this returns the most recent version."""
+        entry = self.get_entry(graph_name)
+        if version is None:
+            version = entry['version']
+        return self.query_version(entry['graph'], version)
         
     def query_version(self, graph:Graph, version:int) -> Graph:
         """Takes a graph representing the superset of multiple versions and extracts just the graph for the specified version."""
@@ -81,7 +109,6 @@ class GraphVersionControl:
                     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                     PREFIX sh: <http://www.w3.org/ns/shacl#>
-                    PREFIX owl: <http://www.w3.org/2002/07/owl#>
                     PREFIX v: <http://example.org/versioning/>
                     SELECT DISTINCT ?s ?p ?o
                     WHERE
@@ -94,6 +121,8 @@ class GraphVersionControl:
                     }
                 """)
         result = graph.query(query, initBindings={"version": Literal(version)})
+        if len(result) == 0:
+            raise NotAVersion("No version {} for graph.".format(version))
         for r in result:
             result_graph.add((r.s, r.p, r.o))
         return result_graph
