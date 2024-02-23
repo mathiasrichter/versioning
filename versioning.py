@@ -65,10 +65,10 @@ class GraphVersionControl:
             result.add((s,p,o))
             vt = URIRef(self.versioning_iri+'vt_'+str(version)+'_'+self.get_id())
             result.add((vt, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), URIRef(self.versioning_iri+'VersionedTriple')))
-            result.add((vt, URIRef(URIRef(self.versioning_iri+'s')), s))
-            result.add((vt, URIRef(URIRef(self.versioning_iri+'p')), p))
-            result.add((vt, URIRef(URIRef(self.versioning_iri+'o')), o))
-            result.add((vt, URIRef(URIRef(self.versioning_iri+'version')), Literal(version)))
+            result.add((vt, URIRef(self.versioning_iri+'s'), s))
+            result.add((vt, URIRef(self.versioning_iri+'p'), p))
+            result.add((vt, URIRef(self.versioning_iri+'o'), o))
+            result.add((vt, URIRef(self.versioning_iri+'version'), Literal(version)))
         return result
     
     def get_version(self, graph_name:str, version:int) -> Graph:
